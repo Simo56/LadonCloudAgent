@@ -1,0 +1,30 @@
+{
+  "name": "ladon",
+  "version": "1.0.0",
+  "description": "An HyperLedger Aries implementation of a Cloud Agent",
+  "main": "src/app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simo56/LadonYarn.git"
+  },
+  "keywords": [
+    "Hyperledger",
+    "Aries",
+    "Verifiable",
+    "Credentials",
+    "Blockchain"
+  ],
+  "author": "Simone Pio Tosatto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Simo56/LadonYarn/issues"
+  },
+  "homepage": "https://github.com/Simo56/LadonYarn#readme",
+  "devDependencies": {
+    "@types/node": "^20.4.4",
+    "typescript": "^5.1.6"
+  }
+}
