@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "npx nodemon",
+    "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node build/index.js"
   },
@@ -33,10 +33,13 @@
     "nodemon": "^3.0.1",
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@aries-framework/askar": "^0.4.0",
     "@aries-framework/core": "^0.4.0",
-    "@aries-framework/node": "^0.4.0"
+    "@aries-framework/node": "^0.4.0",
+    "@hyperledger/aries-askar-nodejs": "^0.1.0"
   }
 }
