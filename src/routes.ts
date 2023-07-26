@@ -1,14 +1,64 @@
+import { Agent } from "@aries-framework/core";
 import { Router, Request, Response } from "express";
+import path from "path";
+import qrcode from "qrcode";
+import { createNewInvitation } from "./agentMethods";
 
 const routes = Router();
 
 routes.get('/', (req: Request, res: Response) => {
-  //const agent: Agent = req.agent;
+  // Check if req.agent is defined
+  if (!req.agent) {
+    // If it's not defined, handle the situation accordingly
+    return res.status(400).json({ error: 'Agent not available' });
+  }
+
+  const agent: Agent = req.agent;
+
   // Now you can use the agent to perform specific actions
   // For example, you can initiate a connection with another Aries agent.
   // Example: await agent.connections.createConnection(...);
 
-  return res.json({ message: 'Hello World' });
+  // Data to be passed to the rendered template
+  const renderedData = {
+    agentConfig: agent.config.toJSON,
+    agentIsInitialized: agent.isInitialized,
+  };
+
+  // Use the 'res.render()' method to send the 'index.ejs' file as the response
+  // Provide the correct path to the 'views' folder relative to the project's root
+  // Pass the data object as the second argument to the 'res.render()' method
+  res.render(path.join(__dirname, '../views/index.ejs'), renderedData);
+
+});
+
+routes.get('/createConnection', async (req, res) => {
+  // Check if req.agent is defined
+  if (!req.agent) {
+    // If it's not defined, handle the situation accordingly
+    return res.status(400).json({ error: 'Agent not available' });
+  }
+  try {
+    const agent: Agent = req.agent;
+
+    // Create a new invitation using the agent
+    const outOfBandRecord = await createNewInvitation(agent);
+
+    // Get the invitation URL
+    const invitationUrl = outOfBandRecord.invitationUrl;
+
+    // Generate a QR code from the invitation URL
+    const qrCodeDataURL = await qrcode.toDataURL(invitationUrl);
+
+    // Send the QR code image as a response
+    res.send(`<img src="${qrCodeDataURL}" alt="QR Code" />`);
+  } catch (error) {
+    console.error("Error creating invitation:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+
+  res.render(path.join(__dirname, '../views/createConnection.ejs'), /*renderedData*/);
+
 });
 
 export default routes; 

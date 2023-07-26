@@ -1,5 +1,5 @@
 import app from './app';
-import * as initConfigurationData from "./initConfigurationData.json";
+import * as initConfigurationData from "./configurationData.json";
 
 const PORT = 3333;
 
