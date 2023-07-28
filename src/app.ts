@@ -5,6 +5,7 @@ import { initializeCloudAgent } from "./agentMethods"; // Import the agent confi
 
 class App {
   public server: Express;
+  private agentPromise: Promise<any> | null = null; // Store the agent promise
 
   constructor() {
     this.server = express();
@@ -20,7 +21,12 @@ class App {
     this.server.use(async (req, res, next) => {
       try {
         // Initialize the cloud agent and Pass the agent to route handlers
-        req.agent = await initializeCloudAgent();
+        // Initialize the agent only once and reuse it for subsequent requests
+        if (!this.agentPromise) {
+          this.agentPromise = initializeCloudAgent();
+          console.log("ho inizializzato l'agent.");
+        }
+        req.agent = await this.agentPromise;
         next();
       } catch (error) {
         console.error("Error initializing the agent:", error);

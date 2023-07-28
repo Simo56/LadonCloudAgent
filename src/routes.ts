@@ -14,7 +14,7 @@ routes.get('/', (req: Request, res: Response) => {
   }
 
   const agent: Agent = req.agent;
-
+  
   // Now you can use the agent to perform specific actions
   // For example, you can initiate a connection with another Aries agent.
   // Example: await agent.connections.createConnection(...);
@@ -57,7 +57,7 @@ routes.get('/createConnection', async (req, res) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 
-  res.render(path.join(__dirname, '../views/createConnection.ejs'), /*renderedData*/);
+  //res.render(path.join(__dirname, '../views/createConnection.ejs'), /*renderedData*/);
 
 });
 

@@ -40,9 +40,13 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@aries-framework/anoncreds": "^0.4.0",
+    "@aries-framework/anoncreds-rs": "^0.4.0",
     "@aries-framework/askar": "^0.4.0",
+    "@aries-framework/cheqd": "^0.4.0",
     "@aries-framework/core": "^0.4.0",
     "@aries-framework/node": "^0.4.0",
+    "@hyperledger/anoncreds-nodejs": "^0.1.0",
     "@hyperledger/aries-askar-nodejs": "^0.1.0"
   }
 }
