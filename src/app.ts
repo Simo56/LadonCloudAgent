@@ -5,6 +5,8 @@ import { initializeCloudAgent } from "./agentMethods"; // Import the agent confi
 
 class App {
   public server: Express;
+  // Declares a private class property called agentPromise, which will hold a promise that resolves to the initialized agent. 
+  // It starts with an initial value of null, indicating that the agent has not been initialized yet. 
   private agentPromise: Promise<any> | null = null; // Store the agent promise
 
   constructor() {
@@ -20,7 +22,6 @@ class App {
 
     this.server.use(async (req, res, next) => {
       try {
-        // Initialize the cloud agent and Pass the agent to route handlers
         // Initialize the agent only once and reuse it for subsequent requests
         if (!this.agentPromise) {
           this.agentPromise = initializeCloudAgent();
@@ -33,7 +34,6 @@ class App {
         return res.status(500).json({ error: "Internal Server Error" });
       }
     });
-
   }
 
   routes() {

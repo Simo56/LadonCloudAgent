@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src=".github/images/LadonLogo.png" alt="Ladon" width="200">
+  <img src="https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg" alt="Ladon" width="200">
   <br>
   Ladon
   <br>
