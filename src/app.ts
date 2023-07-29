@@ -2,12 +2,16 @@ import express from "express";
 import { Express } from "express";
 import routes from "./routes";
 import { initializeCloudAgent } from "./agentMethods"; // Import the agent configuration
+import { Agent } from "@aries-framework/core";
 
 class App {
   public server: Express;
-  // Declares a private class property called agentPromise, which will hold a promise that resolves to the initialized agent. 
-  // It starts with an initial value of null, indicating that the agent has not been initialized yet. 
-  private agentPromise: Promise<any> | null = null; // Store the agent promise
+  // Declares a private class property called agentPromise, which will hold a promise that resolves to the initialized agent.
+  // It starts with an initial value of null, indicating that the agent has not been initialized yet.
+  private agentPromise: Promise<{
+    agent: Agent;
+    qrCodeDataURL: string;
+  }> | null = null; // Store the agent promise and the qrCodeData
 
   constructor() {
     this.server = express();
@@ -22,12 +26,13 @@ class App {
 
     this.server.use(async (req, res, next) => {
       try {
-        // Initialize the agent only once and reuse it for subsequent requests
         if (!this.agentPromise) {
-          this.agentPromise = initializeCloudAgent();
-          console.log("ho inizializzato l'agent.");
+          this.agentPromise = initializeCloudAgent(); // Store the promise in the class property
+          console.log("Agent is being initialized...");
         }
-        req.agent = await this.agentPromise;
+        const { agent, qrCodeDataURL } = await this.agentPromise;
+        req.agent = agent;
+        req.qrCodeDataURL = qrCodeDataURL; // Store qrCodeDataURL in the request object
         next();
       } catch (error) {
         console.error("Error initializing the agent:", error);

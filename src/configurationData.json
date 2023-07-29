@@ -1,4 +1,5 @@
 {
+    "label": "ladonCloudAgent",
     "walletPassword": "sdGwu!Qt6&J5sVDPrGf@DYTJL",
     "id": "ladonCloudAgent",
     "storageMethod": "postgres_storage",

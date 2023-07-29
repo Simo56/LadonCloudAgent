@@ -5,6 +5,7 @@ declare global {
   namespace Express {
     export interface Request {
       agent?: Agent;
+      qrCodeDataURL?: string;
     }
   }
 }

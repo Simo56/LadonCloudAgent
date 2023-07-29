@@ -8,8 +8,10 @@ import {
   WsOutboundTransport,
   ConnectionsModule,
   DidsModule,
-  KeyType,
-  DidDocument,
+  OutOfBandRecord,
+  ConnectionEventTypes,
+  DidExchangeState,
+  ConnectionStateChangedEvent,
 } from "@aries-framework/core";
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node";
 import * as initConfigurationData from "./configurationData.json";
@@ -18,6 +20,7 @@ import { ariesAskar } from "@hyperledger/aries-askar-nodejs";
 import { anoncreds } from "@hyperledger/anoncreds-nodejs";
 import { AnonCredsModule } from "@aries-framework/anoncreds";
 import { AnonCredsRsModule } from "@aries-framework/anoncreds-rs";
+import qrcode from "qrcode";
 
 import {
   CheqdAnonCredsRegistry,
@@ -25,12 +28,11 @@ import {
   CheqdDidResolver,
   CheqdModule,
   CheqdModuleConfig,
-  CheqdDidCreateOptions,
 } from "@aries-framework/cheqd";
 
 const initializeCloudAgent = async () => {
   const config: InitConfig = {
-    label: "ladonCloudAgent",
+    label: initConfigurationData.label,
     logger: new ConsoleLogger(LogLevel.info),
     connectionImageUrl: initConfigurationData.connectionImageUrl,
     walletConfig: {
@@ -86,9 +88,9 @@ const initializeCloudAgent = async () => {
   );
 
   // Initialization of the agent
-  agent
+  await agent
     .initialize()
-    .then(() => {
+    .then(async () => {
       console.log("Agent initialized!");
     })
     .catch((e) => {
@@ -97,16 +99,53 @@ const initializeCloudAgent = async () => {
       );
     });
 
-  return agent;
+  // Create a new invitation using the agent
+  const { invitationUrl, outOfBandRecord } = await createNewInvitation(agent);
+
+  // Generate a QR code from the invitation URL
+  const qrCodeDataURL = await qrcode.toDataURL(invitationUrl);
+
+  // Call the function to setup connection listener after the agent is initialized
+  setupConnectionListener(agent, outOfBandRecord, () => {
+    console.log("Connection completed and custom business logic executed.");
+  });
+
+  return { agent: agent, qrCodeDataURL: qrCodeDataURL };
 };
 
 const createNewInvitation = async (agent: Agent) => {
-  const outOfBandRecord =   await agent.oob.createInvitation();
+  const outOfBandRecord = await agent.oob.createInvitation();
 
   return {
     invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({ domain: "" }),
-    outOfBandRecord,
+    outOfBandRecord: outOfBandRecord,
   };
 };
 
-export { initializeCloudAgent, createNewInvitation }; // Export the functions so it can be used in other files
+const setupConnectionListener = (
+  agent: Agent,
+  outOfBandRecord: OutOfBandRecord,
+  cb: (...args: any) => void
+) => {
+  agent.events.on<ConnectionStateChangedEvent>(
+    ConnectionEventTypes.ConnectionStateChanged,
+    ({ payload }) => {
+      if (payload.connectionRecord.outOfBandId !== outOfBandRecord.id) return;
+      if (payload.connectionRecord.state === DidExchangeState.Completed) {
+        // the connection is now ready for usage in other protocols!
+        console.log(
+          `Connection for out-of-band id ${outOfBandRecord.id} completed`
+        );
+
+        // Custom business logic can be included here
+        // In this example, we can send a basic message to the connection, but anything is possible
+        cb();
+
+        // We exit the flow
+        process.exit(0);
+      }
+    }
+  );
+};
+
+export { initializeCloudAgent }; // Export the functions so it can be used in other files
