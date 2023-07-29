@@ -2,10 +2,29 @@
 <html>
 <head>
     <title>Aries Cloud Agent</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>agentIsInitialized <%= agentIsInitialized %>!</h1>
     <br>
-    <img src="<%= qrCodeDataURL %>" alt="QR Code" />
+    <div id="qrCodeContainer">
+      <!-- The QR code will be loaded here -->
+    </div>
+    <script>
+      // Use AJAX to generate and load the QR code in the background
+      $.ajax({
+        url: "/generateQRCode",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          // On success, set the QR code data URL as the source of the image
+          $("#qrCodeContainer").html(`<img src="${data.qrCodeDataURL}" alt="QR Code" />`);
+        },
+        error: function () {
+          // Handle error if QR code generation fails
+          $("#qrCodeContainer").text("Failed to generate QR code.");
+        }
+      });
+    </script>
 </body>
 </html>

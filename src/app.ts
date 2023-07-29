@@ -8,10 +8,7 @@ class App {
   public server: Express;
   // Declares a private class property called agentPromise, which will hold a promise that resolves to the initialized agent.
   // It starts with an initial value of null, indicating that the agent has not been initialized yet.
-  private agentPromise: Promise<{
-    agent: Agent;
-    qrCodeDataURL: string;
-  }> | null = null; // Store the agent promise and the qrCodeData
+  private agentPromise: Promise<{agent: Agent}> | null = null; // Store the agent promise and the qrCodeData
 
   constructor() {
     this.server = express();
@@ -24,21 +21,22 @@ class App {
   async middlewares() {
     this.server.use(express.json());
 
-    this.server.use(async (req, res, next) => {
-      try {
-        if (!this.agentPromise) {
-          this.agentPromise = initializeCloudAgent(); // Store the promise in the class property
-          console.log("Agent is being initialized...");
-        }
-        const { agent, qrCodeDataURL } = await this.agentPromise;
-        req.agent = agent;
-        req.qrCodeDataURL = qrCodeDataURL; // Store qrCodeDataURL in the request object
-        next();
-      } catch (error) {
-        console.error("Error initializing the agent:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
+    this.server.use(express.json());
+
+  this.server.use(async (req, res, next) => {
+    try {
+      if (!this.agentPromise) {
+        this.agentPromise = initializeCloudAgent(); // Store the promise in the class property
+        console.log("Agent is being initialized...");
       }
-    });
+      const { agent } = await this.agentPromise;
+      req.agent = agent;
+      next();
+    } catch (error) {
+      console.error("Error initializing the agent:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
   }
 
   routes() {

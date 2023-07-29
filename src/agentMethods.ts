@@ -20,7 +20,6 @@ import { ariesAskar } from "@hyperledger/aries-askar-nodejs";
 import { anoncreds } from "@hyperledger/anoncreds-nodejs";
 import { AnonCredsModule } from "@aries-framework/anoncreds";
 import { AnonCredsRsModule } from "@aries-framework/anoncreds-rs";
-import qrcode from "qrcode";
 
 import {
   CheqdAnonCredsRegistry,
@@ -99,18 +98,7 @@ const initializeCloudAgent = async () => {
       );
     });
 
-  // Create a new invitation using the agent
-  const { invitationUrl, outOfBandRecord } = await createNewInvitation(agent);
-
-  // Generate a QR code from the invitation URL
-  const qrCodeDataURL = await qrcode.toDataURL(invitationUrl);
-
-  // Call the function to setup connection listener after the agent is initialized
-  setupConnectionListener(agent, outOfBandRecord, () => {
-    console.log("Connection completed and custom business logic executed.");
-  });
-
-  return { agent: agent, qrCodeDataURL: qrCodeDataURL };
+  return { agent: agent};
 };
 
 const createNewInvitation = async (agent: Agent) => {
@@ -148,4 +136,4 @@ const setupConnectionListener = (
   );
 };
 
-export { initializeCloudAgent }; // Export the functions so it can be used in other files
+export { initializeCloudAgent, createNewInvitation, setupConnectionListener }; // Export the functions so it can be used in other files
