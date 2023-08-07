@@ -2,136 +2,66 @@
   <br>
   <img src="https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg" alt="Ladon" width="200">
   <br>
-  Ladon
+  Ladon Cloud Agent
   <br>
 </h1>
 
-<h4 align="center">An <a href="http://electron.atom.io" target="_blank">HyperLedger Aries</a> implementation of a Cloud Agent</h4>
+<h4 align="center">An implementation of a HyperLedger Aries Cloud Agent</h4>
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#configuration-fixes">Configuration Fixes</a> •
+  <a href="#configuration">Configuration</a> •
+  <a href="#support">Support</a> •
   <a href="#license">License</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
-
 ## Key Features
 
-- LivePreview - Make changes, See changes
-  - Instantly see what your Markdown documents look like in HTML as you create them.
-- Sync Scrolling
-  - While you type, LivePreview will automatically scroll to the current location you're editing.
-- GitHub Flavored Markdown
-- Syntax highlighting
-- [KaTeX](https://khan.github.io/KaTeX/) Support
-- Dark/Light mode
-- Toolbar for basic Markdown formatting
-- Supports multiple cursors
-- Save the Markdown preview as PDF
-- Emoji support in preview :tada:
-- App will keep alive in tray for quick usage
-- Full screen mode
-  - Write distraction free.
-- Cross platform
-  - Windows, macOS and Linux ready.
+- Implements a Cloud Agent using the HyperLedger Aries framework.
+- Secure and customizable agent setup for interacting with Aries networks.
+- Utilizes various Aries modules for DID management, connections, and more.
+- Provides registration and management of schemas for verifiable credentials.
 
 ## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To set up and run the Ladon Cloud Agent, follow these steps:
 
-```bash
-# Clone this repository
-$ git clone https://github.com/amitmerchant1990/electron-markdownify
+1. Clone this repository:
+   ```bash
+   $ git clone https://github.com/Simo56/LadonCloudAgent
+   $ cd LadonCloudAgent
+Install dependencies:
 
-# Go into the repository
-$ cd electron-markdownify
-
-# Install dependencies
+bash
+Copy code
 $ npm install
+Run the agent:
 
-# Run the app
+bash
 $ npm start
-```
+Note: For development mode, use npm start:dev.
 
-> **Note**
-> If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+Configuration
+Before running the agent, make sure to configure the necessary parameters in configurationData.json, including your endpoint URL, DID information, and other relevant settings.
 
-## Download
+Support
+If you find this project helpful, consider showing your support:
 
-You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
-
-## Emailware
-
-Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or it has helped you in any way, I'd like you send me an email at <bullredeyes@gmail.com> about anything you'd want to say about this software. I'd really appreciate it!
-
-## Credits
-
-This software uses the following open source packages:
-
-- [Electron](http://electron.atom.io/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-- [showdown](http://showdownjs.github.io/showdown/)
-- [CodeMirror](http://codemirror.net/)
-- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
-- [highlight.js](https://highlightjs.org/)
-
-## Configuration Fixes
-
-<h4>
-Error "can't find msvs_version in cmd or node config"
-</h4>
-<br>
-
-```bash
-# Fixed by using the command
-node config edit
-# and adding a line with this values:
-msvs_version=2022
-```
-
-<hr>
-<h4>
-Error "The specified module could not be found."
-</h4>
-<br>
-
-```bash
-# Fixed by adding to the SYSTEM environment variables
-Variable name: LD_LIBRARY_PATH
-Variable value: path/to/libindy/lib
-
-# and also adding to the user PATH
-path/to/libindy/lib
-```
-
-<br>
-
-## Support
-
-<a href="https://www.buymeacoffee.com/5Zn8Xh3l9" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-<p>Or</p>
-
-<a href="https://www.patreon.com/amitmerchant">
-	<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+<a href="https://www.buymeacoffee.com/5Zn8Xh3l9" target="_blank">
+  <img src="https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png" alt="Buy Me A Coffee" width="174">
 </a>
+<a href="https://www.patreon.com/amitmerchant">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+</a>
+License
+This project is licensed under the MIT License.
 
-## You may also like...
+Created by Simone Pio Tosatto  · 
+GitHub @Simo56  ·
 
-- [Pomolectron](https://github.com/amitmerchant1990/pomolectron) - A pomodoro app
-- [Correo](https://github.com/amitmerchant1990/correo) - A menubar/taskbar Gmail App for Windows and macOS
+vbnet
 
-## License
 
-MIT
 
----
 
-> [amitmerchant.com](https://www.amitmerchant.com) &nbsp;&middot;&nbsp;
-> GitHub [@amitmerchant1990](https://github.com/amitmerchant1990) &nbsp;&middot;&nbsp;
-> Twitter [@amit_merchant](https://twitter.com/amit_merchant)
