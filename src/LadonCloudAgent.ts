@@ -14,15 +14,14 @@ import {
   KeyDidResolver,
   TypedArrayEncoder,
   KeyType,
+  DidRecord,
 } from "@aries-framework/core";
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node";
-import * as initConfigurationData from "./configurationData.json";
 import { AskarModule } from "@aries-framework/askar";
 import { ariesAskar } from "@hyperledger/aries-askar-nodejs";
 import { anoncreds } from "@hyperledger/anoncreds-nodejs";
 import { AnonCredsModule } from "@aries-framework/anoncreds";
 import { AnonCredsRsModule } from "@aries-framework/anoncreds-rs";
-import { connect } from "ngrok";
 import { indyVdr } from "@hyperledger/indy-vdr-nodejs";
 import {
   IndyVdrAnonCredsRegistry,
@@ -37,25 +36,60 @@ import {
   CheqdModule,
   CheqdModuleConfig,
 } from "@aries-framework/cheqd";
+import { connect } from "ngrok";
 import { BCOVRIN_TEST_GENESIS } from "./bc_ovrin";
+import * as initConfigurationData from "./configurationData.json";
+import { governmentDigitalCredentialSchema } from "./GovernmentDigitalCredentialSchema";
 
 class LadonCloudAgent {
   agent: Agent | undefined;
   outOfBandRecord: OutOfBandRecord | undefined;
   invitationUrl: string | undefined;
+  // Add this property to store the credential definition id
+  credentialDefinitionId: any;
+  connectionIds: any;
+  schemaId: any;
+  schemaObject: any;
 
   constructor() {
+    this.connectionIds = []; // Initialize an empty array to store connection IDs
+
     // Call the initialize method in the constructor
     this.initializeAgent().catch((error) => {
-      console.error("Error initializing LadonCloudAgent:", error);
+      console.error(
+        "Error initializing LadonCloudAgent Inside CONSTRUCTOR:",
+        error
+      );
     });
   }
 
   async initializeAgent() {
+    const config = await this.setupAgentConfiguration();
+
+    this.agent = this.createAgentInstance(config);
+
+    this.registerTransports();
+
+    await this.initializeAgentInstance();
+
+    await this.importDID();
+
+    //this.printAllDIDs();
+
+    await this.registerSchema();
+
+    await this.registerCredentialDefinition();
+
+    return this.agent;
+  }
+
+  async setupAgentConfiguration() {
     const endpoint =
-      initConfigurationData.endpointURL ??
+      initConfigurationData.endpointURL ||
       (await connect(initConfigurationData.agentPort));
-    const config = {
+
+    return {
+      publicDidSeed: initConfigurationData.DIDSeed,
       label: initConfigurationData.label,
       logger: new ConsoleLogger(LogLevel.info),
       connectionImageUrl: initConfigurationData.connectionImageUrl,
@@ -66,8 +100,10 @@ class LadonCloudAgent {
       },
       endpoints: [endpoint],
     };
+  }
 
-    this.agent = new Agent({
+  private createAgentInstance(config: any) {
+    return new Agent({
       config,
       modules: {
         dids: new DidsModule({
@@ -82,8 +118,7 @@ class LadonCloudAgent {
           anoncreds,
         }),
         anoncreds: new AnonCredsModule({
-          // Here we add an Indy VDR registry as an example, any AnonCreds registry
-          // can be used
+          // Here we add an Indy VDR registry as an example, any AnonCreds registry can be used
           registries: [
             new CheqdAnonCredsRegistry(),
             new IndyVdrAnonCredsRegistry(),
@@ -117,33 +152,50 @@ class LadonCloudAgent {
       },
       dependencies: agentDependencies,
     });
+  }
 
-    // Register a simple `WebSocket` outbound transport
-    this.agent.registerOutboundTransport(new WsOutboundTransport());
-
-    // Register a simple `Http` outbound transport
-    this.agent.registerOutboundTransport(new HttpOutboundTransport());
-
-    // Register a simple `Http` inbound transport
-    this.agent.registerInboundTransport(
+  private registerTransports() {
+    this.agent?.registerOutboundTransport(new WsOutboundTransport());
+    this.agent?.registerOutboundTransport(new HttpOutboundTransport());
+    this.agent?.registerInboundTransport(
       new HttpInboundTransport({ port: initConfigurationData.agentPort })
     );
+  }
 
+  private async initializeAgentInstance() {
     try {
-      // Initialize the agent
       await this.agent?.initialize();
       console.log("Agent initialized!");
-
-      // Rest of your existing initialization logic
     } catch (error) {
       console.error("Error initializing agent:", error);
       throw error;
     }
+  }
 
-    // Create and import the DID
-    const seed = TypedArrayEncoder.fromString(initConfigurationData.DIDSeed);
-    const unqualifiedIndyDid = initConfigurationData.DID;
+  async importDID() {
+    if (!this.agent) {
+      throw new Error("Agent is not initialized.");
+    }
+
+    const seed = TypedArrayEncoder.fromString(initConfigurationData.DIDSeed); // What you input on bcovrin. Should be kept secure in production!
+    const unqualifiedIndyDid = initConfigurationData.DID; // will be returned after registering seed on bcovrin
     const indyDid = `did:indy:bcovrin:test:${unqualifiedIndyDid}`;
+
+    /*
+    const cheqdDid = await this.agent.dids.create({
+      method: "cheqd",
+      secret: {
+        verificationMethod: {
+          id: "key-1",
+          type: "Ed25519VerificationKey2020",
+        },
+      },
+      options: {
+        network: "testnet",
+        methodSpecificIdAlgo: "uuid",
+      },
+    });
+    */
 
     await this.agent.dids.import({
       did: indyDid,
@@ -155,7 +207,6 @@ class LadonCloudAgent {
         },
       ],
     });
-    return this.agent;
   }
 
   async createInvitation() {
@@ -206,15 +257,120 @@ class LadonCloudAgent {
             `Connection for out-of-band id ${outOfBandRecord.id} completed`
           );
 
+          // Store the connection ID in the array
+          this.connectionIds.push(payload.connectionRecord.id);
+
+          console.log("connections array content:");
+          console.log(this.connectionIds);
+
           // Custom business logic can be included here
           // In this example we can send a basic message to the connection, but
           // anything is possible
           cb();
-
-          process.exit(0);
         }
       }
     );
+  }
+
+  async registerSchema() {
+    try {
+      if (!this.agent) {
+        console.error("Agent is not initialized.");
+        return;
+      }
+
+      // Check if the schema already exists
+      this.schemaId =
+        governmentDigitalCredentialSchema.issuerId +
+        "/anoncreds/v0/SCHEMA/" +
+        governmentDigitalCredentialSchema.name +
+        "/" +
+        governmentDigitalCredentialSchema.version;
+      const existingSchema = await this.agent.modules.anoncreds.getSchema(
+        this.schemaId
+      );
+
+      console.log(existingSchema);
+
+      if (existingSchema) {
+        console.log(`Schema with ID ${this.schemaId} already exists.`);
+        this.schemaObject = existingSchema;
+        return;
+      }
+
+      // Register the schema
+      const schemaResult = await this.agent.modules.anoncreds.registerSchema({
+        schema: governmentDigitalCredentialSchema,
+        options: {},
+      });
+
+      if (schemaResult.schemaState.state === "failed") {
+        throw new Error(schemaResult.schemaState.reason);
+      }
+
+      this.schemaObject = schemaResult;
+      this.schemaId = schemaResult.schemaState.schemaId;
+    } catch (error) {
+      console.error("Error registering schema", error);
+      throw error;
+    }
+  }
+
+  async registerCredentialDefinition() {
+    if (!this.agent) {
+      console.error("Agent is not initialized.");
+      return;
+    }
+
+    // Register the credential definition if not already registered
+    const credentialDefinitionResult =
+      await this.agent.modules.anoncreds.registerCredentialDefinition({
+        credentialDefinition: {
+          tag: initConfigurationData.CredentialDefinitionTag,
+          issuerId: this.schemaObject.schema.issuerId,
+          schemaId: this.schemaObject.schemaId,
+        },
+        options: {},
+      });
+
+    if (
+      credentialDefinitionResult.credentialDefinitionState.state === "failed"
+    ) {
+      throw new Error(
+        `Error creating credential definition: ${credentialDefinitionResult.credentialDefinitionState.reason}`
+      );
+    }
+
+    // Store the credential definition id in the class property
+    //this.credentialDefinitionId =
+    //credentialDefinitionResult.credentialDefinitionState.credentialDefinitionId;
+
+    this.credentialDefinitionId =
+      credentialDefinitionResult.credentialDefinitionState.credentialDefinitionId;
+
+    console.log(
+      "Credential definition registered (simone) CredentialDefinitionID:",
+      this.credentialDefinitionId
+    );
+    console.log("Credential Object:")
+    console.log(credentialDefinitionResult)
+  }
+
+  async printAllDIDs() {
+    if (!this.agent) {
+      throw new Error("Agent is not initialized.");
+    }
+
+    const didRecords = await this.agent.dids.getCreatedDids();
+
+    console.log("All DIDs:");
+    for (const record of didRecords) {
+      console.log(`DID: ${record.did}`);
+      console.log(`Verkey: ${record.id}`);
+      console.log(`Role: ${record.role}`);
+      console.log(`Metadata: ${JSON.stringify(record.metadata)}`);
+      console.log("------------");
+    }
   }
 }
 

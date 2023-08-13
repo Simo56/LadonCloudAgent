@@ -7,24 +7,30 @@
 <body>
     <h1>agentIsInitialized <%= agentIsInitialized %>!</h1>
     <br>
-    <div id="qrCodeContainer">
-      <!-- The QR code will be loaded here -->
+    <button id="generateQRButton">Generate New QR Code</button>
+    <div id="dynamicQrCodeContainer">
+      <!-- The dynamic QR code will be loaded here -->
     </div>
     <script>
-      // Use AJAX to generate and load the QR code in the background
-      $.ajax({
-        url: "/generateQRCode",
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-          // On success, set the QR code data URL as the source of the image
-          $("#qrCodeContainer").html(`<img src="${data.qrCodeDataURL}" alt="QR Code" />`);
-        },
-        error: function () {
-          // Handle error if QR code generation fails
-          $("#qrCodeContainer").text("Failed to generate QR code.");
-        }
-      });
+      function generateDynamicQRCode() {
+        $.ajax({
+          url: "/generateDynamicQRCode",
+          type: "GET",
+          dataType: "json",
+          success: function (data) {
+            // On success, set the QR code data URL as the source of the image
+            $("#dynamicQrCodeContainer").html(`<img src="${data.qrCodeDataURL}" alt="QR Code" />`);
+          },
+          error: function () {
+            // Handle error if QR code generation fails
+            $("#dynamicQrCodeContainer").text("Failed to generate QR code.");
+          }
+        });
+      }
+
+      // Call generateDynamicQRCode function when the button is clicked
+      $("#generateQRButton").on("click", generateDynamicQRCode);
     </script>
+    <a href="/credential-issue-endpoint">Click here to go to the issue credential form webpage</a>
 </body>
 </html>

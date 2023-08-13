@@ -1,14 +1,16 @@
 {
-    "label": "Ladon Cloud Agent",
-    "walletPassword": "sdGwu!Qt6&J5sVDPrGf@DYTJL",
-    "id": "Ladon Cloud Agent",
-    "storageMethod": "postgres_storage",
-    "connectionImageUrl": "https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg",
-    "agentPort": 3001,
-    "seedPhrase24WordsKeplr": "edit shoe kiwi riot impulse eye steel decide tumble scout truth reopen general quarter push crumble draw present table winter relief recall vacant bundle",
-    "cheqdNetwork": "testnet",
-    "endpointURL": null,
-    "DIDSeed": "rT3uV8wXcA9zGnH4QbEhYpWkRmU5tD2F",
-    "DID": "BYisj4xqWijKxoMrvR1KZW",
-    "DIDVerkey": "6kQjnEQJ2NkhDWp49Vm3rmmT4ZsBeuf7kFgg77UmEpyE"
+  "label": "Ladon Cloud Agent",
+  "walletPassword": "sdGwu!Qt6&J5sVDPrGf@DYTJL",
+  "id": "Ladon Cloud Agent",
+  "storageMethod": "postgres_storage",
+  "connectionImageUrl": "https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg",
+  "agentPort": 3001,
+  "seedPhrase24WordsKeplr": "edit shoe kiwi riot impulse eye steel decide tumble scout truth reopen general quarter push crumble draw present table winter relief recall vacant bundle",
+  "cheqdNetwork": "testnet",
+  "endpointURL": null,
+  "DIDSeed": "rT3uV8wXcA9zGnH4QbEhYpWkRmU5tD2F",
+  "DID": "BYisj4xqWijKxoMrvR1KZW",
+  "DIDVerkey": "6kQjnEQJ2NkhDWp49Vm3rmmT4ZsBeuf7kFgg77UmEpyE",
+  "BCOVRIN_TEST_STARTOFTHECOMPLETEID": "did:indy:bcovrin:test:",
+  "CredentialDefinitionTag": "LadonCloudAgentGovernmentDigital_CD"
 }

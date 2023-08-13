@@ -2,6 +2,7 @@ import express from "express";
 import { Express } from "express";
 import routes from "./routes";
 import LadonCloudAgent from "./LadonCloudAgent";
+import cors from 'cors';
 
 class App {
   public server: Express;
@@ -15,6 +16,15 @@ class App {
   }
 
   async middlewares() {
+    const corsOptions = {
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true,
+      optionsSuccessStatus: 204,
+    };
+
+    this.server.use(cors(corsOptions));
+
     this.server.use(express.json());
 
     this.server.use(async (req, res, next) => {
