@@ -15,12 +15,14 @@ import {
   TypedArrayEncoder,
   KeyType,
   DidRecord,
+  CredentialsModule,
+  V2CredentialProtocol,
 } from "@aries-framework/core";
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node";
 import { AskarModule } from "@aries-framework/askar";
 import { ariesAskar } from "@hyperledger/aries-askar-nodejs";
 import { anoncreds } from "@hyperledger/anoncreds-nodejs";
-import { AnonCredsModule } from "@aries-framework/anoncreds";
+import { AnonCredsCredentialFormatService, AnonCredsModule, LegacyIndyCredentialFormatService } from "@aries-framework/anoncreds";
 import { AnonCredsRsModule } from "@aries-framework/anoncreds-rs";
 import { indyVdr } from "@hyperledger/indy-vdr-nodejs";
 import {
@@ -74,7 +76,7 @@ class LadonCloudAgent {
 
     await this.importDID();
 
-    //this.printAllDIDs();
+    this.printAllDIDs();
 
     await this.registerSchema();
 
@@ -105,11 +107,12 @@ class LadonCloudAgent {
   private createAgentInstance(config: any) {
     return new Agent({
       config,
+      dependencies: agentDependencies,
       modules: {
         dids: new DidsModule({
-          registrars: [new CheqdDidRegistrar(), new IndyVdrIndyDidRegistrar()],
+          registrars: [/*new CheqdDidRegistrar(),*/ new IndyVdrIndyDidRegistrar()],
           resolvers: [
-            new CheqdDidResolver(),
+            /*new CheqdDidResolver(),*/
             new KeyDidResolver(),
             new IndyVdrIndyDidResolver(),
           ],
@@ -120,7 +123,7 @@ class LadonCloudAgent {
         anoncreds: new AnonCredsModule({
           // Here we add an Indy VDR registry as an example, any AnonCreds registry can be used
           registries: [
-            new CheqdAnonCredsRegistry(),
+            /*new CheqdAnonCredsRegistry(),*/
             new IndyVdrAnonCredsRegistry(),
           ],
         }),
@@ -135,8 +138,7 @@ class LadonCloudAgent {
             },
           ],
         }),
-        // Add cheqd module
-        cheqd: new CheqdModule(
+        /*cheqd: new CheqdModule(
           new CheqdModuleConfig({
             networks: [
               {
@@ -145,12 +147,18 @@ class LadonCloudAgent {
               },
             ],
           })
-        ),
+        ),*/
+        credentials: new CredentialsModule({
+          credentialProtocols: [
+            new V2CredentialProtocol({
+              credentialFormats: [new LegacyIndyCredentialFormatService(), new AnonCredsCredentialFormatService()],
+            }),
+          ],
+        }),
         connections: new ConnectionsModule({ autoAcceptConnections: true }),
-        // Register the Askar module on the agent
         askar: new AskarModule({ ariesAskar }),
+        // Add other modules here based on your needs
       },
-      dependencies: agentDependencies,
     });
   }
 
@@ -292,7 +300,7 @@ class LadonCloudAgent {
 
       console.log(existingSchema);
 
-      if (existingSchema) {
+      if (existingSchema && !(existingSchema.resolutionMetadata.error === "notFound")) {
         console.log(`Schema with ID ${this.schemaId} already exists.`);
         this.schemaObject = existingSchema;
         return;
