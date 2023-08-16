@@ -54,7 +54,7 @@ routes.get("/generateDynamicQRCode", async (req, res) => {
     // Set up the connection listener for the new out-of-band record
     cloudAgent?.setupConnectionListener(outOfBandRecord, () => {
       console.log(
-        "We now have an active connection to use in the following tutorials"
+        "We now have an active connection"
       );
     });
 

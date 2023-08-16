@@ -14,15 +14,25 @@ import {
   KeyDidResolver,
   TypedArrayEncoder,
   KeyType,
+  AutoAcceptCredential,
+  AutoAcceptProof,
   DidRecord,
   CredentialsModule,
   V2CredentialProtocol,
+  ProofsModule,
+  V2ProofProtocol,
 } from "@aries-framework/core";
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node";
 import { AskarModule } from "@aries-framework/askar";
 import { ariesAskar } from "@hyperledger/aries-askar-nodejs";
 import { anoncreds } from "@hyperledger/anoncreds-nodejs";
-import { AnonCredsCredentialFormatService, AnonCredsModule, LegacyIndyCredentialFormatService } from "@aries-framework/anoncreds";
+import {
+  AnonCredsCredentialFormatService,
+  AnonCredsModule,
+  AnonCredsProofFormatService,
+  LegacyIndyCredentialFormatService,
+  LegacyIndyProofFormatService,
+} from "@aries-framework/anoncreds";
 import { AnonCredsRsModule } from "@aries-framework/anoncreds-rs";
 import { indyVdr } from "@hyperledger/indy-vdr-nodejs";
 import {
@@ -76,7 +86,7 @@ class LadonCloudAgent {
 
     await this.importDID();
 
-    this.printAllDIDs();
+    //this.printAllDIDs();
 
     await this.registerSchema();
 
@@ -101,6 +111,8 @@ class LadonCloudAgent {
         keyDerivationMethod: KeyDerivationMethod.Argon2IMod,
       },
       endpoints: [endpoint],
+      autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+      autoAcceptProofs: AutoAcceptProof.ContentApproved,
     };
   }
 
@@ -110,7 +122,9 @@ class LadonCloudAgent {
       dependencies: agentDependencies,
       modules: {
         dids: new DidsModule({
-          registrars: [/*new CheqdDidRegistrar(),*/ new IndyVdrIndyDidRegistrar()],
+          registrars: [
+            /*new CheqdDidRegistrar(),*/ new IndyVdrIndyDidRegistrar(),
+          ],
           resolvers: [
             /*new CheqdDidResolver(),*/
             new KeyDidResolver(),
@@ -149,15 +163,23 @@ class LadonCloudAgent {
           })
         ),*/
         credentials: new CredentialsModule({
+          autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
           credentialProtocols: [
             new V2CredentialProtocol({
               credentialFormats: [new LegacyIndyCredentialFormatService(), new AnonCredsCredentialFormatService()],
             }),
           ],
         }),
+        proofs: new ProofsModule({
+          autoAcceptProofs: AutoAcceptProof.ContentApproved,
+          proofProtocols: [
+            new V2ProofProtocol({
+              proofFormats: [new LegacyIndyProofFormatService(), new AnonCredsProofFormatService()],
+            }),
+          ],
+        }),
         connections: new ConnectionsModule({ autoAcceptConnections: true }),
         askar: new AskarModule({ ariesAskar }),
-        // Add other modules here based on your needs
       },
     });
   }
@@ -300,7 +322,7 @@ class LadonCloudAgent {
 
       console.log(existingSchema);
 
-      if (existingSchema && !(existingSchema.resolutionMetadata.error === "notFound")) {
+      if (existingSchema && !existingSchema.resolutionMetadata.error) {
         console.log(`Schema with ID ${this.schemaId} already exists.`);
         this.schemaObject = existingSchema;
         return;
@@ -330,13 +352,15 @@ class LadonCloudAgent {
       return;
     }
 
+    const issuerId = this.schemaObject.schema?.issuerId !== undefined ? this.schemaObject.schema.issuerId : this.schemaObject.schemaState?.schema.issuerId;
+
     // Register the credential definition if not already registered
     const credentialDefinitionResult =
       await this.agent.modules.anoncreds.registerCredentialDefinition({
         credentialDefinition: {
           tag: initConfigurationData.CredentialDefinitionTag,
-          issuerId: this.schemaObject.schema.issuerId,
-          schemaId: this.schemaObject.schemaId,
+          issuerId: issuerId,
+          schemaId: this.schemaId,
         },
         options: {},
       });
@@ -360,8 +384,8 @@ class LadonCloudAgent {
       "Credential definition registered (simone) CredentialDefinitionID:",
       this.credentialDefinitionId
     );
-    console.log("Credential Object:")
-    console.log(credentialDefinitionResult)
+    console.log("Credential Object:");
+    console.log(credentialDefinitionResult);
   }
 
   async printAllDIDs() {

@@ -8,9 +8,9 @@
   "seedPhrase24WordsKeplr": "edit shoe kiwi riot impulse eye steel decide tumble scout truth reopen general quarter push crumble draw present table winter relief recall vacant bundle",
   "cheqdNetwork": "testnet",
   "endpointURL": null,
-  "DIDSeed": "3wGHNp9JqXD7kBzFV5Yh6Kp84DmTQzuv",
-  "DID": "BnDqt6SSxY47PNdr7dkDVk",
-  "DIDVerkey": "6smUwzhfUUQJhPjx7MCPfz7G7zksX5ebJXXzddsC9me6",
+  "DIDSeed": "rT3uV8wXcA9zGnH4QbEhYpWkRmU5tD2F",
+  "DID": "BYisj4xqWijKxoMrvR1KZW",
+  "DIDVerkey": "6kQjnEQJ2NkhDWp49Vm3rmmT4ZsBeuf7kFgg77UmEpyE",
   "BCOVRIN_TEST_STARTOFTHECOMPLETEID": "did:indy:bcovrin:test:",
-  "CredentialDefinitionTag": "LadonCloudAgentGovernmentDigital_CD"
+  "CredentialDefinitionTag": "TagLadonCloudAgentGovernmentDigital_v3.0.0"
 }

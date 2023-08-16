@@ -17,10 +17,13 @@
 
 ## Key Features
 
-- Implements a Cloud Agent using the HyperLedger Aries framework.
-- Secure and customizable agent setup for interacting with Aries networks.
-- Utilizes various Aries modules for DID management, connections, and more.
-- Provides registration and management of schemas for verifiable credentials.
+<b>Cloud Agent Implementation</b>: Ladon Cloud Agent is built upon the Hyperledger Aries framework, delivering a powerful and adaptable cloud agent solution.
+
+<b>Robust Security and Customization</b>: Enjoy the benefits of a secure and highly customizable agent setup that facilitates seamless interaction with Aries networks. Tailor your agent's behavior to meet your specific requirements.
+
+<b>Module Integration</b>: Leveraging a diverse range of Aries modules, Ladon Cloud Agent empowers you with advanced features for DID management, connection establishment, and more. Seamlessly integrate these modules into your workflow.
+
+<b>Verifiable Credentials Management</b>: Streamline the registration and administration of schemas, ensuring a hassle-free process for creating, validating, and managing verifiable credentials. Simplify your interaction with credential issuance and verification workflows.
 
 ## How To Use
 
@@ -31,12 +34,12 @@ To set up and run the Ladon Cloud Agent, follow these steps:
    $ git clone https://github.com/Simo56/LadonCloudAgent
    $ cd LadonCloudAgent
    ```
-   
 2. Install dependencies:
 
 ```bash
 $ npm install
 ```
+
 3. Run the agent:
 
 ```bash
@@ -46,13 +49,12 @@ $ npm start
 Note: For development mode, use npm start:dev.
 
 ## Configuration
+
 Before running the agent, make sure to configure the necessary parameters in configurationData.json, including your endpoint URL, DID information, and other relevant settings.
 
 ## License
+
 This project is licensed under the MIT License.
 
-Created by Simone Pio Tosatto  · 
-GitHub @Simo56  ·
-
-
-
+Created by Simone Pio Tosatto ·
+GitHub @Simo56 ·
