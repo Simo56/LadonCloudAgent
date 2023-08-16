@@ -1,36 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Aries Cloud Agent</title>
+    <title>LADON Cloud Agent</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>agentIsInitialized <%= agentIsInitialized %>!</h1>
-    <br>
-    <button id="generateQRButton">Generate New QR Code</button>
-    <div id="dynamicQrCodeContainer">
-      <!-- The dynamic QR code will be loaded here -->
+    <div class="header">
+        <h1>LADON Cloud Agent</h1>
     </div>
-    <script>
-      function generateDynamicQRCode() {
-        $.ajax({
-          url: "/generateDynamicQRCode",
-          type: "GET",
-          dataType: "json",
-          success: function (data) {
-            // On success, set the QR code data URL as the source of the image
-            $("#dynamicQrCodeContainer").html(`<img src="${data.qrCodeDataURL}" alt="QR Code" />`);
-          },
-          error: function () {
-            // Handle error if QR code generation fails
-            $("#dynamicQrCodeContainer").text("Failed to generate QR code.");
-          }
-        });
-      }
-
-      // Call generateDynamicQRCode function when the button is clicked
-      $("#generateQRButton").on("click", generateDynamicQRCode);
-    </script>
-    <a href="/credential-issue-endpoint">Click here to go to the issue credential form webpage</a>
+    <div class="content">
+        <button id="generateQRButton">Generate QR Code</button>
+        <div id="dynamicQrCodeContainer">
+            <!-- The dynamic QR code will be loaded here -->
+        </div>
+    </div>
+    <a class="link" href="/credential-issue-endpoint">Issue Credential</a>
+    <script src="script.js"></script>
 </body>
 </html>
