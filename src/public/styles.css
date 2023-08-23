@@ -1,24 +1,18 @@
-/* Reset default margin and padding */
-body, h1, p, ul, li {
+body {
     margin: 0;
     padding: 0;
-}
-
-/* Set a background color and font for the whole page */
-body {
-    background-color: #f7f7f7;
     font-family: Arial, sans-serif;
+    background-color: #f2f2f2; /* Light gray background */
 }
 
-/* Header style */
 .header {
     background-color: #007bff;
     color: white;
     text-align: center;
     padding: 20px;
+    margin-bottom: 20px;
 }
 
-/* Content container style */
 .content {
     max-width: 800px;
     margin: 0 auto;
@@ -26,9 +20,9 @@ body {
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-/* Button style */
 #generateQRButton {
     background-color: #007bff;
     color: white;
@@ -36,24 +30,32 @@ body {
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
+    margin-bottom: 20px;
 }
 
-/* Link style */
 .link {
     display: block;
     text-align: center;
-    margin-top: 20px;
+    margin: 20px auto;
     color: #007bff;
     text-decoration: none;
 }
 
-/* Dynamic QR code container style */
 #dynamicQrCodeContainer {
     text-align: center;
     margin-top: 20px;
 }
 
-/* Responsive design adjustments */
+form {
+    text-align: center;
+    margin-top: 20px;
+}
+
+form label, form input, form select, form button {
+    display: block;
+    margin: 10px auto;
+}
+
 @media screen and (max-width: 480px) {
     .content {
         padding: 10px;

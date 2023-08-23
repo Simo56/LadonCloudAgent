@@ -12,6 +12,7 @@ class App {
     this.server = express();
     this.middlewares();
     this.agentInstance = new LadonCloudAgent();
+    this.server.use(express.static(__dirname + '/public'));
     this.routes();
   }
 

@@ -53,6 +53,7 @@ routes.get("/generateDynamicQRCode", async (req, res) => {
 
     // Set up the connection listener for the new out-of-band record
     cloudAgent?.setupConnectionListener(outOfBandRecord, () => {
+      req.agentInstance?.sendMessage("Connected!", req.agentInstance?.connectionIds[req.agentInstance?.connectionIds.length - 1]);
       console.log(
         "We now have an active connection"
       );
@@ -76,44 +77,8 @@ routes.post("/issue-credential-from-ejs-form", async (req, res) => {
     const governmentID = req.body.governmentID;
     const contactInfo = req.body.contactInfo;
 
-
-    console.log(cloudAgent?.agent?.credentials.offerCredential)
-
-    // Use the connectionId and attribute values to issue the credential
-    const anonCredsCredentialExchangeRecord =
-      await cloudAgent?.agent?.credentials.offerCredential({
-        connectionId: connectionId,
-        protocolVersion: "v2",
-        credentialFormats: {
-          anoncreds: {
-            attributes: [
-              { name: "full_name", value: fullName },
-              { name: "date_of_birth", value: dateOfBirth },
-              { name: "address", value: address },
-              { name: "government_id", value: governmentID },
-              { name: "contact_info", value: contactInfo },
-            ],
-            credentialDefinitionId: cloudAgent?.credentialDefinitionId,
-          },
-        },
-      });
-
-    if (!anonCredsCredentialExchangeRecord) {
-      return res.status(500).json({ error: "Failed to offer credential" });
-    }
-
-    // check the state of the credential exchange
-    // and log appropriate messages or take further actions.
-
-    console.log("Credential offer sent successfully");
-    console.log(
-      "Credential exchange ID:",
-      anonCredsCredentialExchangeRecord.id
-    );
-    console.log(
-      "Credential exchange state:",
-      anonCredsCredentialExchangeRecord.state
-    );
+    await cloudAgent?.offerCredential(connectionId, fullName, address, dateOfBirth, governmentID, contactInfo);
+    req.agentInstance?.sendMessage("Sent Credential", req.body.connectionId);
 
     res.redirect("/"); // Redirect back to the main page
   } catch (error) {
@@ -122,4 +87,27 @@ routes.post("/issue-credential-from-ejs-form", async (req, res) => {
   }
 });
 
+routes.get("/proof-request-endpoint", async (req, res) => {
+  try {
+    // Retrieve the list of connections
+    const connections = req.agentInstance?.connectionIds;
+    // Render the credential-issue.ejs template and pass the connections data
+    res.render("proof-request.ejs", { connections });
+  } catch (error) {
+    console.error("Error rendering proof-request:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+routes.post("/proof-request-from-ejs-form", async (req, res) => {
+
+  try {
+    await req.agentInstance?.sendProofRequest(req.body.connectionId);
+    req.agentInstance?.sendMessage("Sent Proof Request", req.body.connectionId);
+    res.redirect("/"); // Redirect back to the main page
+  } catch (error) {
+    console.error("Error requesting proof:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
 export default routes;

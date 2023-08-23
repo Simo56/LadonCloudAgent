@@ -12,5 +12,5 @@
   "DID": "BYisj4xqWijKxoMrvR1KZW",
   "DIDVerkey": "6kQjnEQJ2NkhDWp49Vm3rmmT4ZsBeuf7kFgg77UmEpyE",
   "BCOVRIN_TEST_STARTOFTHECOMPLETEID": "did:indy:bcovrin:test:",
-  "CredentialDefinitionTag": "TagLadonCloudAgentGovernmentDigital_v3.0.0"
+  "CredentialDefinitionTag": "Tag_LCA_GovernmentDigital"
 }

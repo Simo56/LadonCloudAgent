@@ -21,6 +21,7 @@ import {
   V2CredentialProtocol,
   ProofsModule,
   V2ProofProtocol,
+  BasicMessagesModule,
 } from "@aries-framework/core";
 import { agentDependencies, HttpInboundTransport } from "@aries-framework/node";
 import { AskarModule } from "@aries-framework/askar";
@@ -166,7 +167,10 @@ class LadonCloudAgent {
           autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
           credentialProtocols: [
             new V2CredentialProtocol({
-              credentialFormats: [new LegacyIndyCredentialFormatService(), new AnonCredsCredentialFormatService()],
+              credentialFormats: [
+                new LegacyIndyCredentialFormatService(),
+                new AnonCredsCredentialFormatService(),
+              ],
             }),
           ],
         }),
@@ -174,11 +178,15 @@ class LadonCloudAgent {
           autoAcceptProofs: AutoAcceptProof.ContentApproved,
           proofProtocols: [
             new V2ProofProtocol({
-              proofFormats: [new LegacyIndyProofFormatService(), new AnonCredsProofFormatService()],
+              proofFormats: [
+                new LegacyIndyProofFormatService(),
+                new AnonCredsProofFormatService(),
+              ],
             }),
           ],
         }),
         connections: new ConnectionsModule({ autoAcceptConnections: true }),
+        basicMessages: new BasicMessagesModule(),
         askar: new AskarModule({ ariesAskar }),
       },
     });
@@ -352,7 +360,10 @@ class LadonCloudAgent {
       return;
     }
 
-    const issuerId = this.schemaObject.schema?.issuerId !== undefined ? this.schemaObject.schema.issuerId : this.schemaObject.schemaState?.schema.issuerId;
+    const issuerId =
+      this.schemaObject.schema?.issuerId !== undefined
+        ? this.schemaObject.schema.issuerId
+        : this.schemaObject.schemaState?.schema.issuerId;
 
     // Register the credential definition if not already registered
     const credentialDefinitionResult =
@@ -386,6 +397,95 @@ class LadonCloudAgent {
     );
     console.log("Credential Object:");
     console.log(credentialDefinitionResult);
+  }
+
+  async offerCredential(
+    connectionId: string,
+    fullName: string,
+    address: string,
+    dateOfBirth: string,
+    governmentID: string,
+    contactInfo: string
+  ) {
+    if (!this.agent) {
+      console.error("Agent is not initialized.");
+      return;
+    }
+
+    // Use the connectionId and attribute values to issue the credential
+    const anonCredsCredentialExchangeRecord =
+      await this.agent.credentials.offerCredential({
+        connectionId: connectionId,
+        protocolVersion: "v2",
+        credentialFormats: {
+          anoncreds: {
+            attributes: [
+              { name: "full_name", value: fullName },
+              { name: "date_of_birth", value: dateOfBirth },
+              { name: "address", value: address },
+              { name: "government_id", value: governmentID },
+              { name: "contact_info", value: contactInfo },
+            ],
+            credentialDefinitionId: this.credentialDefinitionId,
+          },
+        },
+      });
+
+    if (!anonCredsCredentialExchangeRecord) {
+      console.log("Error offering credential");
+      return;
+    }
+
+    // check the state of the credential exchange
+    // and log appropriate messages or take further actions.
+
+    console.log("Credential offer sent successfully");
+    console.log(
+      "Credential exchange ID:",
+      anonCredsCredentialExchangeRecord.id
+    );
+    console.log(
+      "Credential exchange state:",
+      anonCredsCredentialExchangeRecord.state
+    );
+  }
+
+  private async newProofAttribute() {
+    const proofAttribute = {
+      name: {
+        name: "government_id",
+        restrictions: [
+          {
+            cred_def_id: this.credentialDefinitionId,
+          },
+        ],
+      },
+    };
+
+    return proofAttribute;
+  }
+
+  public async sendProofRequest(connectionId: string) {
+    if (!this.agent) {
+      console.error("Agent is not initialized.");
+      return;
+    }
+    const proofAttribute = await this.newProofAttribute();
+    await this.agent.proofs.requestProof({
+      protocolVersion: "v2",
+      connectionId: connectionId,
+      proofFormats: {
+        anoncreds: {
+          name: "proof-request",
+          version: "1.0",
+          requested_attributes: proofAttribute,
+        },
+      },
+    });
+  }
+
+  public async sendMessage(message: string, connectionId: string) {
+    await this.agent?.basicMessages.sendMessage(connectionId, message);
   }
 
   async printAllDIDs() {

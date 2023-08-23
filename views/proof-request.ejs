@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Request Proof</title>
+  </head>
+  <body>
+    <h1>Request Proof</h1>
+    <div>
+      <label for="connections">Select a Connection:</label>
+      <form id="issueForm" method="post" name="form" id="form" action="/issue-credential-from-ejs-form">
+        <select name="connectionId" id="connections">
+          <% connections.forEach(connection => { %>
+            <option value="<%= connection %>"><%= connection %></option>
+          <% }); %>
+        </select>
+        <button type="submit">Request Proof</button>
+      </form>
+    </div>
+  </body>
+  <script>
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        // Perform an AJAX request to issue the credential
+        const response = await fetch("/proof-request-from-ejs-form", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            connectionId: form.connectionId.value,
+          }),
+        });
+
+        // Handle the response as needed
+        if (response.ok) {
+          // Credential issued successfully, redirect or show a success message
+        } else {
+          // Handle errors, show error message to the user
+        }
+      } catch (error) {
+        console.error("Error requesting proof:", error);
+      }
+    });
+  </script>
+</html>

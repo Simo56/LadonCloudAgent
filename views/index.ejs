@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>LADON Cloud Agent</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -16,6 +16,27 @@
         </div>
     </div>
     <a class="link" href="/credential-issue-endpoint">Issue Credential</a>
-    <script src="script.js"></script>
+    <a class="link" href="/proof-request-endpoint">Request Proof</a>
+
+    <script>
+        // Attach a click event handler to the 'Generate QR Code' button
+        document.getElementById("generateQRButton").addEventListener("click", async () => {
+            try {
+                const response = await fetch("/generateDynamicQRCode");
+                const data = await response.json();
+
+                // Create an <img> element to display the QR code
+                const qrCodeImg = document.createElement("img");
+                qrCodeImg.src = data.qrCodeDataURL;
+
+                // Clear the dynamic QR code container and append the new QR code image
+                const dynamicQrCodeContainer = document.getElementById("dynamicQrCodeContainer");
+                dynamicQrCodeContainer.innerHTML = ""; // Clear previous content
+                dynamicQrCodeContainer.appendChild(qrCodeImg);
+            } catch (error) {
+                console.error("Error generating QR code:", error);
+            }
+        });
+    </script>
 </body>
 </html>
