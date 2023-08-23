@@ -67,6 +67,8 @@ LadonCloudAgent
 ├─ README.md
 ├─ tsconfig.json
 ├─ src
+|  └─ public
+|     └─ styles.css
 │  ├─ app.ts
 │  ├─ bc_ovrin.ts
 │  ├─ configurationData.json
@@ -79,7 +81,6 @@ LadonCloudAgent
 └─ views
    ├─ credential-issue.ejs
    ├─ index.ejs
-   ├─ issue-form-handler.js
-   └─ styles.css
+   └─ proof-request.ejs
 
 ```
