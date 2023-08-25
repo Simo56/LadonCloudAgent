@@ -58,7 +58,6 @@ class LadonCloudAgent {
   agent: Agent | undefined;
   outOfBandRecord: OutOfBandRecord | undefined;
   invitationUrl: string | undefined;
-  // Add this property to store the credential definition id
   credentialDefinitionId: any;
   connectionIds: any;
   schemaId: any;
