@@ -7,16 +7,9 @@ routes.get("/", async (req: Request, res: Response) => {
   try {
     const cloudAgent = req.agentInstance;
 
-    // Data to be passed to the rendered template
-    const renderedData = {
-      agentIsInitialized: cloudAgent?.agent?.isInitialized ?? false,
-    };
     console.log("cloudAgent?.credentialDefinitionId: -------------")
     console.log(cloudAgent?.credentialDefinitionId)
-    // Use the 'res.render()' method to send the 'index.ejs' file as the response
-    // Provide the correct path to the 'views' folder relative to the project's root
-    // Pass the data object as the second argument to the 'res.render()' method
-    res.render("index.ejs", renderedData);
+    res.render("index.ejs");
   } catch (error) {
     console.error("Error initializing agent:", error);
     res.status(500).json({ error: "Something went wrong" });
