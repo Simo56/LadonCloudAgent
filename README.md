@@ -40,7 +40,9 @@ To set up and run the Ladon Cloud Agent, follow these steps:
 $ npm install
 ```
 
-3. Run the agent:
+3. Create the appropriate configurationData.json file
+
+4. Run the agent:
 
 ```bash
 $ npm start
