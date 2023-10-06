@@ -1,6 +1,7 @@
 <h1 align="center">
   <br>
   <img src="https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg" alt="Ladon" width="200">
+  ![Ladon Cloud Agent Logo](https://github.com/Simo56/LadonCloudAgent/blob/main/LadonLogo.png?raw=true)
   <br>
   Ladon Cloud Agent
   <br>
@@ -53,6 +54,24 @@ Note: For development mode, use npm start:dev.
 ## Configuration
 
 Before running the agent, make sure to configure the necessary parameters in configurationData.json, including your endpoint URL, DID information, and other relevant settings.
+This is an example of the configuration JSON file:
+
+```
+{
+    "label": "Ladon Cloud Agent",
+    "walletPassword": "<YOUR_PASSWORD>",
+    "id": "Ladon Cloud Agent",
+    "storageMethod": "postgres_storage",
+    "connectionImageUrl": "https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg",
+    "agentPort": 3001,
+    "seedPhrase24WordsKeplr": "<YOUR_SEED_PHRASE>",
+    "cheqdNetwork": "testnet",
+    "endpointURL": null,
+    "DIDSeed": "<YOUR_DID_SEED>",
+    "DID": "<YOUR_DID>",
+    "DIDVerkey": "<YOUR_DID_VERKEY>"
+}
+```
 
 ## License
 
