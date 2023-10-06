@@ -1,9 +1,10 @@
 <h1 align="center">
   <br>
-  ![Ladon Cloud Agent Logo](https://github.com/Simo56/LadonCloudAgent/blob/main/LadonLogo.png?raw=true)
+  <img width="512" alt="LadonLogo" src="https://github.com/Simo56/LadonCloudAgent/assets/20564263/22c02a08-5ff9-4c09-b92a-8f581d18abc7">
   <br>
   Ladon Cloud Agent
   <br>
+
 </h1>
 
 <h4 align="center">An implementation of a HyperLedger Aries Cloud Agent</h4>
