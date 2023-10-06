@@ -1,6 +1,5 @@
 <h1 align="center">
   <br>
-  <img src="https://ipfs.io/ipfs/QmQGTESg3BymZ7eQwppXfNXoS4YS5AVpmVHxxKD7VXtpXb?filename=LADON_CLOUDAGENT_PIXLR.COM.jpg" alt="Ladon" width="200">
   ![Ladon Cloud Agent Logo](https://github.com/Simo56/LadonCloudAgent/blob/main/LadonLogo.png?raw=true)
   <br>
   Ladon Cloud Agent
