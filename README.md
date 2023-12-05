@@ -16,6 +16,15 @@
   <a href="#license">License</a>
 </p>
 
+## Why?
+In the context of the growing significance of privacy, digital identity, and cybersecurity, I have developed "Ladon," an innovative agent for self-sovereign identity (SSI). This decentralized model of digital identity management leverages Hyperledger Aries and blockchain technology, incorporating distributed ledgers, asymmetric encryption, Zero-Knowledge Proofs (ZKPs), and Decentralized Identifiers (DIDs).
+
+The project is implemented in TypeScript and is based on a Node.js web server with Express and npm. The approach focuses on the practical application of Hyperledger Aries technologies and their integration into the ecosystem. Throughout development, I adhered to best practices in digital identity management, decentralization, cybersecurity, and user control over their digital identity.
+
+The thesis covers the fundamentals of digital identities, major innovations, comparisons with current methodologies, and an exploration of blockchain technology and Hyperledger Aries. Ladon's architecture, features, and its role in the blockchain-based self-sovereign identity space are examined.
+
+This implementation contributes to understanding the potential of blockchain-based SSI, providing a practical example of technology application. It promotes user autonomy and control over their digital identity, emphasizing the key role of Hyperledger Aries in providing a robust and scalable framework for digital identity management in an increasingly decentralized era. This opens new possibilities for secure and private digital interactions based on blockchain technology.
+
 ## Key Features
 
 <b>Cloud Agent Implementation</b>: Ladon Cloud Agent is built upon the Hyperledger Aries framework, delivering a powerful and adaptable cloud agent solution.
